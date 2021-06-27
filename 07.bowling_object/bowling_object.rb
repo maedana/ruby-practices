@@ -40,7 +40,7 @@ class Frame
   end
 
   def base_score
-    strike? || spare? ? STRIKE : (@first_shot.score + @second_shot&.score || 0)
+    strike? || spare? ? STRIKE : @first_shot.score + @second_shot.score
   end
 
   def bonus_score
