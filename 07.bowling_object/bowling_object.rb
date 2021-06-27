@@ -5,7 +5,7 @@ class Game
 
   def initialize(input_text)
     @shots = build_shots(input_text)
-    build_frames(input_text)
+    @frames = build_frames(input_text)
   end
 
   def calculate_score
@@ -48,7 +48,7 @@ class Game
       end
     end
     shots_by_frames = [*shots_by_frames[0..8], [*shots_by_frames[9], *shots_by_frames[10], *shots_by_frames[11]]]
-    @frames = shots_by_frames.map { |shots| Frame.new(*shots) }
+    shots_by_frames.map { |shots| Frame.new(*shots) }
   end
 end
 
