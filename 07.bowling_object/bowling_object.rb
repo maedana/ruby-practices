@@ -90,7 +90,6 @@ class Shot
   end
 end
 
-
 if __FILE__ == $PROGRAM_NAME
   puts Game.new(ARGV[0]).calculate_score
 end
