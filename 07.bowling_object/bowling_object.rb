@@ -55,7 +55,7 @@ class Frame
 
   class << self
     def build_frames(pinfall_text)
-      shots = Shot.build_shots(pinfall_text)
+      shots = pinfall_text.split(',').map { |pinfall| Shot.new(pinfall) }
 
       Array.new(10).map do
         first_shot = shots.shift
@@ -75,12 +75,6 @@ class Shot
 
   def score
     @pinfall == 'X' ? 10 : @pinfall.to_i
-  end
-
-  class << self
-    def build_shots(pinfall_text)
-      pinfall_text.split(',').map { |pinfall| Shot.new(pinfall) }
-    end
   end
 end
 
