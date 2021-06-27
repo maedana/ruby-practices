@@ -40,11 +40,17 @@ class Frame
   end
 
   def base_score
-    (self.strike? || self.spare?) ? STRIKE : @first_shot.score + @second_shot&.score || 0
+    strike? || spare? ? STRIKE : (@first_shot.score + @second_shot&.score || 0)
   end
 
   def bonus_score
-    @bonus_shots.map(&:score).sum
+    if strike?
+      @bonus_shots.map(&:score).sum
+    elsif spare?
+      @bonus_shots[0].score
+    else
+      0
+    end
   end
 
   class << self
@@ -54,15 +60,8 @@ class Frame
       10.times.map do |index|
         first_shot = shots.shift
         frame = Frame.new(first_shot)
-        if frame.strike?
-          frame.bonus_shots = shots[0, 2]
-        else
-          second_shot = shots.shift
-          frame = Frame.new(first_shot, second_shot)
-          if frame.spare?
-            frame.bonus_shots = shots[0, 1]
-          end
-        end
+        frame = Frame.new(first_shot, shots.shift) unless frame.strike?
+        frame.bonus_shots = shots[0, 2]
         frame
       end
     end
@@ -85,6 +84,4 @@ class Shot
   end
 end
 
-if __FILE__ == $PROGRAM_NAME
-  puts Game.new(ARGV[0]).calculate_score
-end
+puts Game.new(ARGV[0]).calculate_score if __FILE__ == $PROGRAM_NAME
