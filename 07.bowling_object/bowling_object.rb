@@ -14,13 +14,13 @@ class Game
   private
 
   def base_score
-    @frames.flatten.sum
+    @scores_by_frames.flatten.sum
   end
 
   def bonus_score
     bonus = 0
-    @frame_instance.each_with_index do |shots, index|
-      following_pinfalls = @frames[index.succ..].flatten
+    @frames.each_with_index do |shots, index|
+      following_pinfalls = @scores_by_frames[index.succ..].flatten
       if shots.strike?
         bonus += following_pinfalls[0..1].sum
       elsif index < 9 && shots.spare?
@@ -31,17 +31,17 @@ class Game
   end
 
   def create_frame(pinfall_text)
-    @frames = []
+    @scores_by_frames = []
     frame = []
     Frame.pinfalls(pinfall_text).map do |shot|
       frame << shot
-      if frame.count == 2 || frame.count == 1 && shot == 10 || @frames[9]
-        @frames << frame
+      if frame.count == 2 || frame.count == 1 && shot == 10 || @scores_by_frames[9]
+        @scores_by_frames << frame
         frame = []
       end
     end
-    @frames = [*@frames[0..8], [*@frames[9], *@frames[10], *@frames[11]]]
-    @frame_instance = @frames.map { |shots| Frame.new(*shots) }
+    @scores_by_frames = [*@scores_by_frames[0..8], [*@scores_by_frames[9], *@scores_by_frames[10], *@scores_by_frames[11]]]
+    @frames = @scores_by_frames.map { |shots| Frame.new(*shots) }
   end
 end
 
@@ -80,4 +80,7 @@ class Shot
   end
 end
 
-puts Game.new(ARGV[0]).calculate_score
+
+if __FILE__ == $PROGRAM_NAME
+  puts Game.new(ARGV[0]).calculate_score
+end
