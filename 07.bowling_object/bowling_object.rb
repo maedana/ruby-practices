@@ -23,12 +23,12 @@ end
 class Frame
   STRIKE = 10
 
-  attr_writer :bonus_shots
+  attr_writer :bonus_shot_candidates
 
   def initialize(first_shot, second_shot = nil)
     @first_shot = first_shot
     @second_shot = second_shot
-    @bonus_shots = []
+    @bonus_shot_candidates = []
   end
 
   def strike?
@@ -45,9 +45,9 @@ class Frame
 
   def bonus_score
     if strike?
-      @bonus_shots.map(&:score).sum
+      @bonus_shot_candidates.map(&:score).sum
     elsif spare?
-      @bonus_shots[0].score
+      @bonus_shot_candidates[0].score
     else
       0
     end
@@ -61,7 +61,7 @@ class Frame
         first_shot = shots.shift
         frame = Frame.new(first_shot)
         frame = Frame.new(first_shot, shots.shift) unless frame.strike?
-        frame.bonus_shots = shots[0, 2]
+        frame.bonus_shot_candidates = shots[0, 2]
         frame
       end
     end
