@@ -2,7 +2,7 @@
 
 class Game
   def initialize(input_text)
-    @frames = build_frames(input_text)
+    @frames = Frame.build_frames(input_text)
   end
 
   def calculate_score
@@ -31,20 +31,6 @@ class Game
       end
     end
   end
-
-  def build_frames(pinfall_text)
-    shots = Shot.build_shots(pinfall_text)
-
-    10.times.map do |index|
-      if index == 9
-        Frame.new(*shots)
-      else
-        first_shot = shots.shift
-        frame = Frame.new(first_shot)
-        frame.strike? ? frame : Frame.new(first_shot, shots.shift)
-      end
-    end
-  end
 end
 
 class Frame
@@ -69,6 +55,22 @@ class Frame
 
   def base_score
     (self.strike? || self.spare?) ? STRIKE : shots.map(&:score).sum
+  end
+
+  class << self
+    def build_frames(pinfall_text)
+      shots = Shot.build_shots(pinfall_text)
+
+      10.times.map do |index|
+        if index == 9
+          Frame.new(*shots)
+        else
+          first_shot = shots.shift
+          frame = Frame.new(first_shot)
+          frame.strike? ? frame : Frame.new(first_shot, shots.shift)
+        end
+      end
+    end
   end
 end
 
