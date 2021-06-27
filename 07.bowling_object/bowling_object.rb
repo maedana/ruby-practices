@@ -41,7 +41,7 @@ class Game
       end
     end
     @shots_by_frames = [*@shots_by_frames[0..8], [*@shots_by_frames[9], *@shots_by_frames[10], *@shots_by_frames[11]]]
-    @frames = @shots_by_frames.map { |shots| Frame.new(*shots.map(&:score)) }
+    @frames = @shots_by_frames.map { |shots| Frame.new(*shots) }
   end
 end
 
@@ -50,9 +50,9 @@ class Frame
   attr_reader :first_shot, :second_shot, :third_shot
 
   def initialize(first_shot, second_shot = nil, third_shot = nil)
-    @first_shot = Shot.new(first_shot)
-    @second_shot = Shot.new(second_shot)
-    @third_shot = Shot.new(third_shot)
+    @first_shot = first_shot
+    @second_shot = second_shot
+    @third_shot = third_shot
   end
 
   def strike?
