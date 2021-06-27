@@ -4,7 +4,6 @@ class Game
   attr_reader :input_text
 
   def initialize(input_text)
-    @shots = build_shots(input_text)
     @frames = build_frames(input_text)
   end
 
@@ -16,7 +15,7 @@ class Game
 
   def base_score
     # FIXME: 最終フレームのボーナス点も混じってしまってる
-    @shots.map(&:score).sum
+    @frames.map(&:shots).flatten.map(&:score).sum
   end
 
   def bonus_score
@@ -33,14 +32,11 @@ class Game
     bonus
   end
 
-  def build_shots(pinfall_text)
-    Shot.build_shots(pinfall_text)
-  end
-
   def build_frames(pinfall_text)
     shots_by_frames = []
     shots_by_frame = []
-    @shots.each do |shot|
+    shots = Shot.build_shots(pinfall_text)
+    shots.each do |shot|
       shots_by_frame << shot
       if shots_by_frame.count == 2 || shots_by_frame.count == 1 && shot.score == 10 || shots_by_frames[9]
         shots_by_frames << shots_by_frame
