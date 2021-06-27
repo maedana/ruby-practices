@@ -8,24 +8,27 @@ class Game
   end
 
   def calculate_score
-    [base_score_with_bonus_score_for_last_frame, bonus_score_without_last_frame].sum
+    [base_score, bonus_score].sum
   end
 
   private
 
-  def base_score_with_bonus_score_for_last_frame
-    @frames.map(&:shots).flatten.map(&:score).sum
+  def base_score
+    @frames.map(&:base_score).sum
   end
 
-  def bonus_score_without_last_frame
-    @frames.each_with_index.sum do |shots, index|
-      following_frames = @frames[index.succ..]
-      following_pinfalls = following_frames.map(&:shots).flatten.map(&:score)
-      if shots.strike?
-        following_pinfalls[0..1].sum
-      elsif index < 9 && shots.spare?
-        following_pinfalls[0]
+  def bonus_score
+    shots = @frames.map(&:shots).flatten
+    shot_count = 0
+    @frames.each.sum do |frame|
+      if frame.strike?
+        shot_count += 1
+        shots[shot_count, 2].map(&:score).sum
+      elsif frame.spare?
+        shot_count += 2
+        shots[shot_count].score
       else
+        shot_count += 2
         0
       end
     end
@@ -66,6 +69,10 @@ class Frame
 
   def shots
     [@first_shot, @second_shot, @third_shot].compact
+  end
+
+  def base_score
+    (self.strike? || self.spare?) ? STRIKE : shots.map(&:score).sum
   end
 end
 
