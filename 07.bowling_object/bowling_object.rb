@@ -37,12 +37,12 @@ class Game
 
   def build_frames(pinfall_text)
     @shots_by_frames = []
-    frame = []
-    @shots.map do |shot|
-      frame << shot
-      if frame.count == 2 || frame.count == 1 && shot.score == 10 || @shots_by_frames[9]
-        @shots_by_frames << frame
-        frame = []
+    shots_by_frame = []
+    @shots.each do |shot|
+      shots_by_frame << shot
+      if shots_by_frame.count == 2 || shots_by_frame.count == 1 && shot.score == 10 || @shots_by_frames[9]
+        @shots_by_frames << shots_by_frame
+        shots_by_frame = []
       end
     end
     @shots_by_frames = [*@shots_by_frames[0..8], [*@shots_by_frames[9], *@shots_by_frames[10], *@shots_by_frames[11]]]
