@@ -16,29 +16,19 @@ class Game
   end
 
   def bonus_score
-    shots = @frames.map(&:shots).flatten
-    shot_count = 0
-    @frames.each.sum do |frame|
-      if frame.strike?
-        shot_count += 1
-        shots[shot_count, 2].map(&:score).sum
-      elsif frame.spare?
-        shot_count += 2
-        shots[shot_count].score
-      else
-        shot_count += 2
-        0
-      end
-    end
+    @frames.map(&:bonus_score).sum
   end
 end
 
 class Frame
   STRIKE = 10
-  def initialize(first_shot, second_shot = nil, third_shot = nil)
+
+  attr_writer :bonus_shots
+
+  def initialize(first_shot, second_shot = nil)
     @first_shot = first_shot
     @second_shot = second_shot
-    @third_shot = third_shot
+    @bonus_shots = []
   end
 
   def strike?
@@ -49,12 +39,12 @@ class Frame
     @first_shot.score != STRIKE && [@first_shot.score, @second_shot.score].sum == 10
   end
 
-  def shots
-    [@first_shot, @second_shot, @third_shot].compact
+  def base_score
+    (self.strike? || self.spare?) ? STRIKE : @first_shot.score + @second_shot&.score || 0
   end
 
-  def base_score
-    (self.strike? || self.spare?) ? STRIKE : shots.map(&:score).sum
+  def bonus_score
+    @bonus_shots.map(&:score).sum
   end
 
   class << self
@@ -62,13 +52,18 @@ class Frame
       shots = Shot.build_shots(pinfall_text)
 
       10.times.map do |index|
-        if index == 9
-          Frame.new(*shots)
+        first_shot = shots.shift
+        frame = Frame.new(first_shot)
+        if frame.strike?
+          frame.bonus_shots = shots[0, 2]
         else
-          first_shot = shots.shift
-          frame = Frame.new(first_shot)
-          frame.strike? ? frame : Frame.new(first_shot, shots.shift)
+          second_shot = shots.shift
+          frame = Frame.new(first_shot, second_shot)
+          if frame.spare?
+            frame.bonus_shots = shots[0, 1]
+          end
         end
+        frame
       end
     end
   end
