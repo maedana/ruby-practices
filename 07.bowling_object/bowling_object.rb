@@ -4,6 +4,7 @@ class Game
   attr_reader :input_text
 
   def initialize(input_text)
+    @shots = build_shots(input_text)
     build_frames(input_text)
   end
 
@@ -30,10 +31,14 @@ class Game
     bonus
   end
 
+  def build_shots(pinfall_text)
+    Shot.build_shots(pinfall_text)
+  end
+
   def build_frames(pinfall_text)
     @shots_by_frames = []
     frame = []
-    Shot.build_shots(pinfall_text).map do |shot|
+    @shots.map do |shot|
       frame << shot
       if frame.count == 2 || frame.count == 1 && shot.score == 10 || @shots_by_frames[9]
         @shots_by_frames << frame
