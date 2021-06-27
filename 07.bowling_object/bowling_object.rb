@@ -8,28 +8,27 @@ class Game
   end
 
   def calculate_score
-    [base_score, bonus_score].sum
+    [base_score_with_bonus_score_for_last_frame, bonus_score_without_last_frame].sum
   end
 
   private
 
-  def base_score
-    # FIXME: 最終フレームのボーナス点も混じってしまってる
+  def base_score_with_bonus_score_for_last_frame
     @frames.map(&:shots).flatten.map(&:score).sum
   end
 
-  def bonus_score
-    bonus = 0
-    @frames.each_with_index do |shots, index|
+  def bonus_score_without_last_frame
+    @frames.each_with_index.sum do |shots, index|
       following_frames = @frames[index.succ..]
       following_pinfalls = following_frames.map(&:shots).flatten.map(&:score)
       if shots.strike?
-        bonus += following_pinfalls[0..1].sum
+        following_pinfalls[0..1].sum
       elsif index < 9 && shots.spare?
-        bonus += following_pinfalls[0]
+        following_pinfalls[0]
+      else
+        0
       end
     end
-    bonus
   end
 
   def build_frames(pinfall_text)
