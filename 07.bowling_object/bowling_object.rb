@@ -57,7 +57,7 @@ class Frame
     def build_frames(pinfall_text)
       shots = Shot.build_shots(pinfall_text)
 
-      10.times.map do |index|
+      Array.new(10).map do
         first_shot = shots.shift
         frame = Frame.new(first_shot)
         frame = Frame.new(first_shot, shots.shift) unless frame.strike?
