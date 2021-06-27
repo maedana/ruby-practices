@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Game
-  attr_reader :input_text
-
   def initialize(input_text)
     @frames = build_frames(input_text)
   end
@@ -51,8 +49,6 @@ end
 
 class Frame
   STRIKE = 10
-  attr_reader :first_shot, :second_shot, :third_shot
-
   def initialize(first_shot, second_shot = nil, third_shot = nil)
     @first_shot = first_shot
     @second_shot = second_shot
