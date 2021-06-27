@@ -14,34 +14,34 @@ class Game
   private
 
   def base_score
-    @scores_by_frames.flatten.sum
+    @shots_by_frames.flatten.map(&:score).sum
   end
 
   def bonus_score
     bonus = 0
     @frames.each_with_index do |shots, index|
-      following_pinfalls = @scores_by_frames[index.succ..].flatten
+      following_pinfalls = @shots_by_frames[index.succ..].flatten
       if shots.strike?
-        bonus += following_pinfalls[0..1].sum
+        bonus += following_pinfalls.map(&:score)[0..1].sum
       elsif index < 9 && shots.spare?
-        bonus += following_pinfalls[0]
+        bonus += following_pinfalls.map(&:score)[0]
       end
     end
     bonus
   end
 
   def create_frame(pinfall_text)
-    @scores_by_frames = []
+    @shots_by_frames = []
     frame = []
-    Frame.pinfalls(pinfall_text).map do |shot|
+    Shot.build_shots(pinfall_text).map do |shot|
       frame << shot
-      if frame.count == 2 || frame.count == 1 && shot == 10 || @scores_by_frames[9]
-        @scores_by_frames << frame
+      if frame.count == 2 || frame.count == 1 && shot.score == 10 || @shots_by_frames[9]
+        @shots_by_frames << frame
         frame = []
       end
     end
-    @scores_by_frames = [*@scores_by_frames[0..8], [*@scores_by_frames[9], *@scores_by_frames[10], *@scores_by_frames[11]]]
-    @frames = @scores_by_frames.map { |shots| Frame.new(*shots) }
+    @shots_by_frames = [*@shots_by_frames[0..8], [*@shots_by_frames[9], *@shots_by_frames[10], *@shots_by_frames[11]]]
+    @frames = @shots_by_frames.map { |shots| Frame.new(*shots.map(&:score)) }
   end
 end
 
@@ -62,12 +62,6 @@ class Frame
   def spare?
     @first_shot.score != STRIKE && [@first_shot.score, @second_shot.score].sum == 10
   end
-
-  class << self
-    def pinfalls(pinfall_text)
-      pinfall_text.split(',').map { |pinfall| Shot.new(pinfall).score }
-    end
-  end
 end
 
 class Shot
@@ -77,6 +71,12 @@ class Shot
 
   def score
     @pinfall == 'X' ? 10 : @pinfall.to_i
+  end
+
+  class << self
+    def build_shots(pinfall_text)
+      pinfall_text.split(',').map { |pinfall| Shot.new(pinfall) }
+    end
   end
 end
 
