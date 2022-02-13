@@ -11,6 +11,8 @@ class FrameCalculator
   end
 
   def result
+    return @first_score + @second_score if @first_score + @second_score < 10
+
     @first_score + @second_score + @third_score
   end
 
