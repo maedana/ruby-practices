@@ -18,4 +18,9 @@ class FrameCalculatorTest < Minitest::Test
     frame_score = FrameCalculator.new('X', 'X', 'X').result
     assert_equal 10 + 10 + 10, frame_score
   end
+
+  def test_spare
+    frame_score = FrameCalculator.new('1', '9', '1').result
+    assert_equal 1 + 9 + 1, frame_score
+  end
 end
