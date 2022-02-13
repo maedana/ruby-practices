@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 class FrameCalculator
-  def initialize(first_mark, second_mark, third_mark)
+  def initialize(first_mark, second_mark, third_mark = nil)
     @first_score = score(first_mark)
     @second_score = score(second_mark)
-    @third_score = score(third_mark)
+    @third_score = third_mark ? score(third_mark) : 0
     @first_plus_second_score = @first_score + @second_score
   end
 
