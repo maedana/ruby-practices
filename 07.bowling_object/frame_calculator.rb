@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class FrameCalculator
+  STRIKE_SCORE = 10
+  STRIKE_MARK = 'X'
+
   def initialize(first_mark, second_mark, third_mark = nil)
     @first_score = score(first_mark)
     @second_score = score(second_mark)
@@ -9,22 +12,22 @@ class FrameCalculator
   end
 
   def result
-    return @first_plus_second_score if @first_plus_second_score < 10
+    return @first_plus_second_score if @first_plus_second_score < STRIKE_SCORE
 
     @first_plus_second_score + @third_score
   end
 
   def strike?
-    @first_score == 10
+    @first_score == STRIKE_SCORE
   end
 
   def spare?
-    !strike? && @first_plus_second_score == 10
+    !strike? && @first_plus_second_score == STRIKE_SCORE
   end
 
   private
 
   def score(mark)
-    mark == 'X' ? 10 : mark.to_i
+    mark == STRIKE_MARK ? STRIKE_SCORE : mark.to_i
   end
 end
