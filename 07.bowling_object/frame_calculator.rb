@@ -14,6 +14,14 @@ class FrameCalculator
     @first_plus_second_score + @third_score
   end
 
+  def strike?
+    @first_score == 10
+  end
+
+  def spare?
+    !strike? && @first_plus_second_score == 10
+  end
+
   private
 
   def score(mark)
