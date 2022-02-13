@@ -13,4 +13,9 @@ class FrameCalculatorTest < Minitest::Test
     frame_score = FrameCalculator.new('X', 'X', '1').result
     assert_equal 10 + 10 + 1, frame_score
   end
+
+  def test_turkey
+    frame_score = FrameCalculator.new('X', 'X', 'X').result
+    assert_equal 10 + 10 + 10, frame_score
+  end
 end
