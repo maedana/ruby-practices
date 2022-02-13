@@ -21,10 +21,6 @@ class FrameCalculator
     @first_score == STRIKE_SCORE
   end
 
-  def spare?
-    !strike? && @first_plus_second_score == STRIKE_SCORE
-  end
-
   private
 
   def score(mark)
