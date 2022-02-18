@@ -11,7 +11,7 @@ class FrameCalculator
   end
 
   def result
-    return first_two_score if first_two_score < STRIKE_SCORE
+    return first_two_score if first_two_score < 10 # strikeやspareではない
 
     first_two_score + @third_score
   end
