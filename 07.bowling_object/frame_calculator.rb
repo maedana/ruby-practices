@@ -6,15 +6,14 @@ class FrameCalculator
 
   def initialize(first_mark, second_mark, third_mark = nil)
     @first_score = score(first_mark)
-    second_score = score(second_mark)
+    @second_score = score(second_mark)
     @third_score = third_mark ? score(third_mark) : 0
-    @first_two_score = @first_score + second_score
   end
 
   def result
-    return @first_two_score if @first_two_score < STRIKE_SCORE
+    return first_two_score if first_two_score < STRIKE_SCORE
 
-    @first_two_score + @third_score
+    first_two_score + @third_score
   end
 
   def strike?
@@ -25,5 +24,9 @@ class FrameCalculator
 
   def score(mark)
     mark == STRIKE_MARK ? STRIKE_SCORE : mark.to_i
+  end
+
+  def first_two_score
+    @first_two_score ||= @first_score + @second_score
   end
 end
