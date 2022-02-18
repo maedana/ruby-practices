@@ -12,7 +12,7 @@ class FrameCalculator
   end
 
   def result
-    return @first_two_score if @first_plus_second_score < STRIKE_SCORE
+    return @first_two_score if @first_two_score < STRIKE_SCORE
 
     @first_two_score + @third_score
   end
