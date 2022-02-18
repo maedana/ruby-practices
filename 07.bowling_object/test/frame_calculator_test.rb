@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'minitest/autorun'
-require_relative 'frame_calculator'
+require_relative '../frame_calculator'
 
 class FrameCalculatorTest < Minitest::Test
   def test_strike_frame
@@ -25,7 +25,7 @@ class FrameCalculatorTest < Minitest::Test
   end
 
   def test_normal_frame
-    frame_score = FrameCalculator.new('1', '1', '1').result
-    assert_equal 1 + 1, frame_score
+    frame_score = FrameCalculator.new('1', '3', '5').result
+    assert_equal 1 + 3, frame_score
   end
 end
