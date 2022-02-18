@@ -8,13 +8,13 @@ class FrameCalculator
     @first_score = score(first_mark)
     @second_score = score(second_mark)
     @third_score = third_mark ? score(third_mark) : 0
-    @first_plus_second_score = @first_score + @second_score
+    @first_two_score = @first_score + @second_score
   end
 
   def result
-    return @first_plus_second_score if @first_plus_second_score < STRIKE_SCORE
+    return @first_two_score if @first_plus_second_score < STRIKE_SCORE
 
-    @first_plus_second_score + @third_score
+    @first_two_score + @third_score
   end
 
   def strike?
