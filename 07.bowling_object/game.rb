@@ -8,9 +8,10 @@ class Game
   end
 
   def result
+    first_shot_index = 0
     Array.new(10).sum do
-      f = FrameCalculator.new(*@marks.slice(0, 3))
-      f.strike? ? @marks.shift : @marks.shift(2)
+      f = FrameCalculator.new(*@marks.slice(first_shot_index, 3))
+      first_shot_index += f.strike? ? 1 : 2
       f.result
     end
   end

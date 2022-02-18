@@ -31,4 +31,10 @@ class GameTest < Minitest::Test
   def test_calc_all_zero
     assert_equal 0, Game.new('0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0').result
   end
+
+  def test_call_result_twice
+    game = Game.new('6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X,X,1,8')
+    assert_equal 144, game.result
+    assert_equal 144, game.result
+  end
 end
